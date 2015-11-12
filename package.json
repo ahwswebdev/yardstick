@@ -1,0 +1,22 @@
+{
+  "name": "yardstick",
+  "version": "0.0.1",
+  "description": "Testing framework for phantomcss",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahwswebdev/yardstick.git"
+  },
+  "author": "Rick Ekelschot <rick.ekelschot@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ahwswebdev/yardstick/issues"
+  },
+  "homepage": "https://github.com/ahwswebdev/yardstick",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  }
+}
