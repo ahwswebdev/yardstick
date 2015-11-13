@@ -7,9 +7,8 @@ var OpenPage = require('../utils/open-page');
 module.exports = function (options) {
     options = _.defaults(options || {}, {
         url: '',
-        name: '',
         sectionSelector: '',
-        testSelectors: [],
+        testSelectors: {},
         hover: true,
         hoverWait: 500
     });
@@ -20,20 +19,22 @@ module.exports = function (options) {
             this.mouse.move(-10, -10);
         })
         .then(function () {
-            options.testSelectors.forEach(function (selector) {
-                phantomcss.screenshot(selector, options.name + selector);
+            _.each(options.testSelectors, function (selector, name) {
+                casper.waitForSelector(selector, function () {
+                    phantomcss.screenshot(selector, name);
+                });
             });
         })
         .then(function () {
             if (options.hover) {
-                options.testSelectors.forEach(function (selector) {
+                _.each(options.testSelectors, function (selector, name) {
                     casper
                         .then(function () {
                             this.mouse.move(selector);
                         })
                         .wait(options.hoverWait)
                         .then(function () {
-                            phantomcss.screenshot(selector, options.name + selector + '-hover');
+                            phantomcss.screenshot(selector, name + '-hover');
                         });
                 }.bind(this));
             }

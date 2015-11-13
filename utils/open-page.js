@@ -8,8 +8,10 @@ module.exports = function (options) {
     options = _.defaults(options, {
         url: null,
         sectionSelector: null,
-        startWait: 500,
-        sectionWait: 1000,
+        startWait: 1000,
+        startWaitSelector: null,
+        sectionWait: 0,
+        sectionWaitSelector: null,
         classNames: {
             html: [
                 'no-touch',
@@ -24,11 +26,22 @@ module.exports = function (options) {
 
     return casper
         .start(options.url)
-        .wait(options.startWait)
+        .then(function () {
+            if (options.startWaitSelector) {
+                casper.waitForSelector(options.startWaitSelector);
+            } else if (options.startWait > 0) {
+                casper.wait(options.startWait);
+            }
+        })
         .then(function () {
             if (options.sectionSelector) {
                 this.click(options.sectionSelector);
-                casper.wait(options.sectionWait);
+
+                if (options.sectionWaitSelector) {
+                    casper.waitForSelector(options.sectionWaitSelector);
+                } else if (options.sectionWait > 0) {
+                    casper.wait(options.sectionWait);
+                }
             }
         })
         .then(function () {
@@ -37,9 +50,11 @@ module.exports = function (options) {
                     var element = document.querySelector(key),
                         classNames = options.classNames[key];
 
-                    classNames.forEach(function (className) {
-                        element.classList.add(className);
-                    });
+                    if (element) {
+                        classNames.forEach(function (className) {
+                            element.classList.add(className);
+                        });
+                    }
                 });
             }, options);
         });
