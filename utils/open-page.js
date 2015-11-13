@@ -8,10 +8,11 @@ module.exports = function (options) {
     options = _.defaults(options, {
         url: null,
         sectionSelector: null,
-        startWait: 1000,
+        startWait: 0,
         startWaitSelector: null,
         sectionWait: 0,
         sectionWaitSelector: null,
+        imagesLoadedWait: 0,
         classNames: {
             html: [
                 'no-touch',
@@ -42,6 +43,11 @@ module.exports = function (options) {
                 } else if (options.sectionWait > 0) {
                     casper.wait(options.sectionWait);
                 }
+            }
+        })
+        .then(function () {
+            if (options.imagesLoadedWait > 0) {
+                casper.wait(options.imagesLoadedWait);
             }
         })
         .then(function () {
