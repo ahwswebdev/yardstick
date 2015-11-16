@@ -22,11 +22,11 @@ module.exports = function (options) {
         })
         .then(function () {
             _.each(options.testSelectors, function (selector, name) {
-                if (casper.visible(selector)) {
-                    casper.waitForSelector(selector, function () {
+                casper.waitForSelector(selector, function () {
+                    if (casper.visible(selector)) {
                         phantomcss.screenshot(selector, name);
-                    });
-                }
+                    }
+                });
             });
         })
         .then(function () {
