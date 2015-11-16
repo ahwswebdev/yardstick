@@ -10,7 +10,9 @@ module.exports = function (options) {
         sectionSelector: '',
         testSelectors: {},
         hover: true,
-        hoverWait: 500
+        hoverWait: 500,
+        click: false,
+        clickWait: 500
     });
 
     OpenPage(options)
@@ -20,22 +22,40 @@ module.exports = function (options) {
         })
         .then(function () {
             _.each(options.testSelectors, function (selector, name) {
-                casper.waitForSelector(selector, function () {
-                    phantomcss.screenshot(selector, name);
-                });
+                if (casper.visible(selector)) {
+                    casper.waitForSelector(selector, function () {
+                        phantomcss.screenshot(selector, name);
+                    });
+                }
             });
         })
         .then(function () {
             if (options.hover) {
                 _.each(options.testSelectors, function (selector, name) {
-                    casper
-                        .then(function () {
-                            this.mouse.move(selector);
-                        })
-                        .wait(options.hoverWait)
-                        .then(function () {
-                            phantomcss.screenshot(selector, name + '-hover');
-                        });
+                    if (casper.visible(selector)) {
+                        casper
+                            .then(function () {
+                                this.mouse.move(selector);
+                            })
+                            .wait(options.hoverWait)
+                            .then(function () {
+                                phantomcss.screenshot(selector, name + '-hover');
+                            });
+                    }
+                }.bind(this));
+            }
+            if (options.click) {
+                _.each(options.testSelectors, function (selector, name) {
+                    if (casper.visible(selector)) {
+                        casper
+                            .then(function () {
+                                this.click(selector);
+                            })
+                            .wait(options.clickWait)
+                            .then(function () {
+                                phantomcss.screenshot(selector, name + '-click');
+                            });
+                    }
                 }.bind(this));
             }
         });
